@@ -13,14 +13,17 @@ class Config:
     OPENAI_MODEL = os.getenv("OPENAI_MODEL")
     
     # Фичи
-    ENABLE_REASONING = os.getenv("ENABLE_REASONUNG", "false").lower() == "true"
-    MAX_CONTEXT_MESSAGES = int(os.getenv("MAX_CONTENT_MESSAGES", 10))
+    ENABLE_REASONING = os.getenv("ENABLE_REASONING", "false").lower() == "true"
+    MAX_CONTEXT_MESSAGES = int(os.getenv("MAX_CONTEXT_MESSAGES", 10))
     
     
     DB_URL = os.getenv("DB_URL")
     
-    if not BOT_TOKEN or not OPENAI_API_KEY:
-        raise ValueError("Не найдены BOT_TOKEN и OPEN_API_KEY, настройте их в файле .env")
+    if not BOT_TOKEN:
+        raise ValueError("Не найден BOT_TOKEN, настройте его в файле .env")
+
+    if not OPENAI_API_KEY:
+        raise ValueError("Не найден OPENAI_API_KEY, настройте его в файле .env")
     
     if not DB_URL:
         raise ValueError("Не найдена DB_URL, настройте его в файле .env")

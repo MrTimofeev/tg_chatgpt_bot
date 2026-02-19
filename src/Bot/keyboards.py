@@ -24,10 +24,7 @@ class KeyboardFactory:
         Reply-клавиатура для команды /start
         """
         builder = ReplyKeyboardBuilder()
-        builder.button(
-            text="🔄 Новый запрос",
-            callback_data="reset_context"
-        )
+        builder.button(text="🔄 Новый запрос")
         builder.adjust(1)
         return builder.as_markup(resize_keyboard=True, one_time_keyboard=False)
     

@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
@@ -22,6 +23,17 @@ async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         
-async def get_session() -> AsyncSession:
-    """Получение сессии для работы с БД"""
-    return async_session_maker()
+@asynccontextmanager
+async def get_session():
+    """Контекстный менеджер для безопасной работы с сессией БД"""
+    session = async_session_maker()
+    try:
+        yield session
+        await session.commit()
+    except Exception as e:
+        await session.rollback()
+        raise
+    finally:
+        await session.close()
+
+
