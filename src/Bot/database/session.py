@@ -24,5 +24,4 @@ async def init_db():
         
 async def get_session() -> AsyncSession:
     """Получение сессии для работы с БД"""
-    async with async_session_maker() as session:
-        yield session
+    return async_session_maker()
