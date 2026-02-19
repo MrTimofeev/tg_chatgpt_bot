@@ -17,7 +17,7 @@ async def get_or_create_dialog(session: AsyncSession, user_id: int) -> Dialog:
     dialog = result.scalar_one_or_none()
 
     if not dialog:
-        dialog = Dialog(user_id=user_id, message="[]")
+        dialog = Dialog(user_id=user_id, messages="[]")
         session.add(dialog)
         await session.commit()
         await session.refresh(dialog)
