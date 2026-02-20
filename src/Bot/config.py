@@ -12,8 +12,6 @@ class Config:
     OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
     OPENAI_MODEL = os.getenv("OPENAI_MODEL")
     
-    # Фичи
-    ENABLE_REASONING = os.getenv("ENABLE_REASONING", "false").lower() == "true"
     MAX_CONTEXT_MESSAGES = int(os.getenv("MAX_CONTEXT_MESSAGES", 10))
     
     
