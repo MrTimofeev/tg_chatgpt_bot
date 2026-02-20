@@ -5,32 +5,21 @@ class KeyboardFactory:
     """Фабрика для создания клавиатур бота."""
     
     @staticmethod
-    def get_reset_inline_keyboard() -> InlineKeyboardMarkup:
+    def get_main_menu_keyboard() -> ReplyKeyboardMarkup:
         """
-        Инлайн-клавиатура с кнопкой сброса контекста.
-        Отображается под каждым сообщением бота.
+        Основное меню с кнопкой сброса контекста (через команду /start)
+        Эта клавиатура появляется один рза при старте или по запросу.
         """
-        builder = InlineKeyboardBuilder()
-        builder.button(
-            text="🔄 Новый запрос",
-            callback_data="reset_context"
-        )
-        builder.adjust(1)
-        return builder.as_markup()
-    
-    @staticmethod
-    def get_start_reply_keyboard() -> ReplyKeyboardMarkup:
-        """
-        Reply-клавиатура для команды /start
-        """
+        
         builder = ReplyKeyboardBuilder()
         builder.button(text="🔄 Новый запрос")
         builder.adjust(1)
         return builder.as_markup(resize_keyboard=True, one_time_keyboard=False)
     
     @staticmethod
-    def get_empty_inline_keyboard() -> InlineKeyboardMarkup:
-        """Пустая клавиатура - чтобы убрать кнопки"""
-        return InlineKeyboardMarkup(inline_keyboard=[])
+    def get_empty_keyboard() -> None:
+        """Возвращает None, чтобы убрать клавиатуру полностью"""
+        return None
+    
     
 keyboards = KeyboardFactory()

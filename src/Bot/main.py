@@ -35,7 +35,7 @@ async def cmd_start(message: Message):
     await message.answer(
         START_MESSAGE,
         parse_mode=ParseMode.MARKDOWN,
-        reply_markup=keyboards.get_reset_inline_keyboard()
+        reply_markup=keyboards.get_main_menu_keyboard()
     )
     logger.info(f"User {user_id} started the bot")
 
@@ -46,53 +46,17 @@ async def cmd_help(message: Message):
     await message.answer(
         HELP_MESSAGE,
         parse_mode=ParseMode.MARKDOWN,
-        reply_markup=keyboards.get_reset_inline_keyboard()
+        reply_markup=keyboards.get_main_menu_keyboard()
     )
     logger.info(f"User {message.from_user.id} requested help")
 
 
-@dp.callback_query(F.data == "reset_context")
-async def process_reset_callback(callback: CallbackQuery):
-    """Обработчик нажатия кнопки «Новый запрос»"""
-    user_id = callback.from_user.id
-
-    async with get_session() as session:
-        service = DialogService(session)
-        await service.reset_dialog(user_id)
-
-    await callback.answer("🗑️ Контекст очищен!", show_alert=False)
-
-    try:
-        await callback.message.edit_reply_markup(
-            reply_markup=keyboards.get_reset_inline_keyboard()
-        )
-    except Exception:
-        pass
-
-    await callback.message.answer(
-        "✅ История диалога сброшена. Можете начать новый разговор!",
-        reply_markup=keyboards.get_reset_inline_keyboard()
-    )
-
-    logger.info(f"User {user_id} reset conversation context")
-
-
 @dp.message(F.text == "🔄 Новый запрос")
 async def handle_reset_button_text(message: Message):
-    """Обработчик нажатия на кнопку 'Новый запрос' в Reply клавиатуре"""
-    user_id = message.from_user.id
-
-    async with get_session() as session:
-        service = DialogService(session)
-        await service.reset_dialog(user_id)
-
-    await message.answer(
-        "✅ История диалога сброшена. Можешь начать новый разговор!",
-        reply_markup=keyboards.get_reset_inline_keyboard()
-    )
-    logger.info(f"User {user_id} reset context via reply button")
-
-
+    """Обработка нажатия на кнопку в меню"""
+    await cmd_start(message)
+    
+    
 @dp.message(F.text)
 async def handle_text_message(message: Message):
     """Обработчик текстовых сообщений - основной функционал бота"""
@@ -116,7 +80,6 @@ async def handle_text_message(message: Message):
             await message.answer(
                 ai_response,
                 parse_mode=ParseMode.MARKDOWN,
-                reply_markup=keyboards.get_reset_inline_keyboard()
             )
             logger.info(f"Sent response to user {user_id}")
 
@@ -125,7 +88,6 @@ async def handle_text_message(message: Message):
                 f"Error handling message from user {user_id}: {e}", exc_info=True)
             await message.answer(
                 "⚠️ Произошла ошибка при обработке запроса. Попробуйте ещё раз.",
-                reply_markup=keyboards.get_reset_inline_keyboard()
             )
 
 
